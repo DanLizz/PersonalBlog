@@ -14,20 +14,21 @@ from flask_gravatar import Gravatar
 from datetime import date, datetime
 from functools import wraps
 import smtplib
+import os
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 
 current_year = datetime.now().year
 current_month = datetime.now().month
 current_date = datetime.now().date()
 
-my_email = "youremail@gmail.com"
-my_password = "yourpw"
+my_email = os.environ.get('MY_EMAIL')
+my_password = os.environ.get('MY_PW')
 
 app = Flask(__name__)
 
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
@@ -53,7 +54,7 @@ def admin_only(f):
 
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
